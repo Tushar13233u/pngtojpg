@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PNG to JPG Converter</title>
+    <style>
+        /* Global Styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        /* Main Content Styles */
+        .converter-container {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-family: "Chiller", sans-serif;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        p {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        .custom-button {
+            border: 2px solid #007bff;
+            color: #007bff;
+            background-color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .custom-button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        /* Image Styles */
+        img {
+            max-width: 500px;
+            display: none;
+            margin-top: 20px;
+        }
+        
+        /* Download Button Styles */
+        #downloadImageButton {
+            display: none;
+            text-decoration: none;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        #downloadImageButton:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>PNG to JPG Converter</h1>
+    </header>
+    
+    <div class="converter-container">
+        <p>Select a PNG image file to convert it to JPG format. You can then preview and download the converted image.</p>
+        
+        <label for="fileInput" class="custom-button">
+            Choose File
+        </label>
+        <input type="file" id="fileInput" accept="image/png">
+        <label for="convertButton" class="custom-button">
+            Convert to JPG
+        </label>
+        <input type="submit" id="convertButton" onclick="convertImage()">
+    </div>
+    
+    <img id="previewImage">
+    
+    <a id="downloadImageButton" download="converted_image.jpg">
+        <img src="download-button.png" alt="Download">
+        Download Image
+    </a>
+    
+    <script>
+        function convertImage() {
+            const fileInput = document.getElementById('fileInput');
+            const previewImage = document.getElementById('previewImage');
+            const downloadImageButton = document.getElementById('downloadImageButton');
+
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const reader = new FileReader();
+
+                reader.onload = function(event) {
+                    const imgDataUrl = event.target.result;
+
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    const img = new Image();
+                    img.src = imgDataUrl;
+
+                    img.onload = function() {
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        ctx.drawImage(img, 0, 0, img.width, img.height);
+
+                        const jpgDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+
+                        previewImage.src = jpgDataUrl;
+                        previewImage.style.display = 'block';
+                        downloadImageButton.href = jpgDataUrl;
+                        downloadImageButton.style.display = 'inline-block';
+                    };
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
